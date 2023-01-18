@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>КубиК</title>
+
+
+
+
+
+</head>
+
+<body>
+{{respons.respond}}
+{% for item in Data %}
+{{item.text}}
+{% endfor %}
+  <h1>Войти</h1>
+<div id="wrapper">
+  <form id="contactForm" method="POST">
+		<input type="text" id="user_input" autofocus=""><br>
+    <button type="button" id="sender">Send data</button><br>
+    <p id="pText">Click me!</p>
+  </form>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+      $(document).ready(function () {
+          // отслеживаем событие отправки формы
+          $('#contactForm').submit(function () {
+              // создаем AJAX-вызов
+              $.ajax({
+                  data: $(this).serialize(), // получаем данные формы
+                  type: $(this).attr('method'), // GET или POST
+                  url: "{% url 'test_res' %}",
+                  // если успешно, то
+                  success: function (response) {
+                      alert("Спасибо, что обратились к нам " + response.name);
+                  },
+                  // если ошибка, то
+                  error: function (response) {
+                      // предупредим об ошибке
+                      alert(response.responseJSON.errors);
+                      console.log(response.responseJSON.errors)
+                  }
+              });
+              return false;
+          });
+      })
+  </script>
+
+</body>
+</html>

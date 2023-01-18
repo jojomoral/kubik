@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+<link rel="stylesheet" href="{% static 'css/chat.css'%}" type="text/css">
+
+  <title>CodePen - Material Messaging App Concept</title>
+
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <nav class="menu">
+        <ul class="items">
+          <li class="item">
+            <i class="fa fa-home" aria-hidden="true"></i>
+          </li>
+          <li class="item">
+            <i class="fa fa-user" aria-hidden="true"></i>
+          </li>
+          <li class="item">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </li>
+          <li class="item item-active">
+            <i class="fa fa-commenting" aria-hidden="true"></i>
+          </li>
+          <li class="item">
+            <i class="fa fa-file" aria-hidden="true"></i>
+          </li>
+          <li class="item">
+            <i class="fa fa-cog" aria-hidden="true"></i>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="discussions">
+        <div class="discussion search">
+          <div class="searchbar">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="text" placeholder="Search..."></input>
+          </div>
+        </div>
+        {% for item in AllChats %}<a href="/chat/{{item.Chat.id}}">
+        <div  {% if item.Chat.id == ActiveChat.Chat.id %}
+              class="discussion message-active"
+              {% else %}
+              class="discussion"
+              {% endif %}>
+          <div class="photo" style="background-image: url({% static '' %}image/avatars/{{item.Profile.photo}});">
+            <div class="online"></div>
+          </div>
+          <div class="desc-contact">
+            <p class="name">{{item.Chat.title}}</p>
+            <p class="message">{{item.Message.text}}</p>
+          </div>
+          <div class="timer">{{item.Message.date}}</div>
+        </div></a>
+        {% endfor %}
+      </section>
+      <section class="chat">
+        <div class="header-chat">
+          <i class="icon fa fa-user-o" aria-hidden="true"></i>
+          <p class="name">{{ActiveChat.ChatTitle}}</p>
+          <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+        </div>
+        <div class="messages-chat">
+         {% for message in ActiveChat.Messages %}
+			<div class="message">
+          {% if message.from_user == User %}
+          <div class="response">
+            <p class="text"> {{message.text}} </p></div>
+
+             {% else %}
+             <p class="text"> {{message.text}} </p>
+
+             {% endif %}
+
+          {% if message.from_user == User %}
+          <p class="response-time time"> {{message.date|time}}</p>
+          {% else %}
+           <p class="time">{{message.date|time}}</p>
+          {% endif %}
+              </div>
+            {% endfor %}
+
+
+        </div>
+        <form id="send_message" method="post" action="/chat/{{ActiveChat.Chat.id}}/send" autocomplete="off">{% csrf_token %}
+        <div class="footer-chat">
+          <input type="text" id="text" name="text" class="write-message" placeholder="Напишите свое сообщение здесь"></input>
+          <button class="icon send fa fa-paper-plane-o clickable" aria-hidden="true" type="submit"></button>
+        </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
+
